@@ -114,7 +114,7 @@ TheTower.Game.prototype = {
         this.game.gui.callResume.add( this.resume, this );
         this.game.gui.callRestart.add( this.restart, this );
         this.game.gui.buttonShare.events.onInputDown.add(this.gotoTwitter, this);
-        this.game.gui.buttonPay.events.onInputDown.add(this.gotopay, this);
+        // this.game.gui.buttonPay.events.onInputDown.add(this.gotopay, this);
         this.game.gui.buttonMore.events.onInputDown.add( this.gotoSite, this );
 
         this.score = 0;
