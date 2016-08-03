@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript" src="src/sdk.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>超级虐跳</title>
+<link rel="stylesheet" href="css/stylesheet.css" type="text/css" charset="utf-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1, IE=9">
+<meta name="format-detection" content="telephone=no">
+<meta name="HandheldFriendly" content="true">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta name="HandheldFriendly" content="true">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Jumping Thief">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script>
+        var GameName = "22_nuexin";
+    </script>
+    <script src="../Content/js/CommonHeader.js"></script>
+    <script language="javascript" type="text/javascript" src="js/config.js"></script>
+	<script src="src/phaser.min.js"></script>
+	<script src="src/Boot.js"></script>
+	<script src="src/Preloader.js"></script>
+	<script src="src/Game.js"></script>
+	<script src="src/Texts.js"></script>
+	<script src="src/SoundManager.js"></script>
+	<script src="src/GUI.js"></script>
+	<script src="src/Column.js"></script>
+	<script src="src/Character.js"></script>
+</head>
+<body onload="updateShare(0);">
+    <img src="wx.jpg" width="0" height="0" style="position: absolute" />
+ 
+    <div id="share" style="position:absolute;top:0px;left:0px;right:0px; bottom:0px; font-size:30px; color:red; text-align:center; z-index:9999999999; background-color:cadetblue; display:none;" onclick="hideShare();">
+        <img src="assets/share.png" width="436" />
+        <br><br>
+        想得5分不容易~~<br>
+        <img src="assets/wx.png" />
+        <br><br>
+        召唤你们朋友挑战吧。
+        <br>
+        <br>
+    </div>
+<div id="game"></div>
+<div id="orientation"></div>
+<script type="text/javascript">
+    function hideShare() {
+        document.getElementById('share').style.display = "none";
+    }
+
+    function Share() {
+        document.getElementById('share').style.display = "block";
+    }
+
+    var lang;
+    var game;
+    var iPhone5;
+    var iPhone4;
+    startGame = (function () {
+        lang = 'en';
+
+        var iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
+        var pixelRatio = window['devicePixelRatio'] || 1;
+        iPhone5 = iPhone && pixelRatio==2 && window.screen.height == 568;
+        iPhone4 = !iPhone5 && iPhone;
+
+
+        var width = 320;
+        var height = 480;
+        var product = window.innerWidth * window.innerHeight;
+
+        if( iPhone5 )
+            height = 530;
+
+        if( product > 400000 || pixelRatio==2){
+            width *= 2;
+            height *= 2;
+        }
+
+        game = new Phaser.Game(width, height, Phaser.CANVAS, 'game');
+
+        game.state.add('Boot', TheTower.Boot);
+        game.state.add('Game', TheTower.Game);
+        game.state.add('Preloader', TheTower.Preloader);
+
+        game.state.start('Boot');
+
+
+    });
+    startGame();
+
+
+
+</script>
+    <script src="../Content/js/CommonFooter.js"></script>
+</body>
+</html>
