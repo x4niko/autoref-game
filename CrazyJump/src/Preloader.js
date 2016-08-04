@@ -14,7 +14,7 @@ TheTower.Preloader.prototype = {
         var gradient = this.game.add.bitmapData(this.game.width, this.game.height);
         var grd = gradient.context.createLinearGradient(0,0,0,this.game.height);
         grd.addColorStop(0, "#000000");
-        grd.addColorStop(1, "#000000");        
+        grd.addColorStop(1, "#000000");
         // grd.addColorStop(0,"#333333");
         // grd.addColorStop(1,"#aaaaaa");
         gradient.context.fillStyle = grd;
@@ -41,14 +41,14 @@ TheTower.Preloader.prototype = {
             this.load.atlasXML('sprites', 'assets/sprites@2x.png', 'assets/sprites@2x.xml');
             this.load.spritesheet('run', 'assets/run@2x.png', 90, 140, 16);
         }else{
-            this.load.atlasXML('sprites', 'assets/sprites.png', 'assets/sprites.xml'); 
-            this.load.spritesheet('run', 'assets/run.png', 45, 70, 16);
+            this.load.atlasXML('sprites', 'assets/sprites@2x.png', 'assets/sprites@2x.xml');
+            this.load.spritesheet('run', 'assets/run@2x.png', 45, 70, 16);
         }
 
-        this.load.audio( "button", ["assets/snd/button.mp3"]);
-        this.load.audio( "hit", ["assets/snd/hit.mp3"]);
-        this.load.audio( "jump", ["assets/snd/jump.mp3"]);
-        this.load.audio( "got", ["assets/snd/got.mp3"]);
+        // this.load.audio( "button", ["assets/snd/button.mp3"]);
+        // this.load.audio( "hit", ["assets/snd/hit.mp3"]);
+        // this.load.audio( "jump", ["assets/snd/jump.mp3"]);
+        // this.load.audio( "got", ["assets/snd/got.mp3"]);
 	},
 
 	create: function () {
@@ -61,8 +61,8 @@ TheTower.Preloader.prototype = {
             localStorage["Jumper.bestScore"] = 0;
 		}
 
-        this.game.sndManager = new SoundManager( this.game, JSON.parse(localStorage["Jumper.sound"]) );
-		
+        // this.game.sndManager = new SoundManager( this.game, JSON.parse(localStorage["Jumper.sound"]) );
+
 		this.preloadBar.cropEnabled = false;
 
 		this.game.input.onDown.add( function() {

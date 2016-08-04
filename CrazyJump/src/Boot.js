@@ -31,7 +31,7 @@ TheTower.Boot.prototype = {
         this.scale.leaveFullScreen.add( this.exitFullscreen, this);
         this.scale.enterFullScreen.add( this.enterFullscreen, this);
 
-        if (this.game.device.desktop) 
+        if (this.game.device.desktop)
         {
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             this.scale.setMinMax(320,480,1280,1920);
@@ -40,7 +40,7 @@ TheTower.Boot.prototype = {
             this.scale.setScreenSize(true);
             this.scale.refresh();
         }
-        else 
+        else
         {
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             this.scale.setMinMax(320,480,768,1024);
@@ -60,7 +60,7 @@ TheTower.Boot.prototype = {
         if( scaleValue(10) != 10){
            this.load.image('logo', 'assets/softgames@2x.png');
         }else{
-            this.load.image('logo', 'assets/softgames.png');
+            this.load.image('logo', 'assets/softgames@2x.png');
         }
     },
 
