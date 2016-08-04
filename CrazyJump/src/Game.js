@@ -210,12 +210,18 @@ TheTower.Game.prototype = {
        }
    },
 
-   gotoSite: function() {
- setTimeout( Play68.goHome(), 500 )
+   gotoSite: function () {
+       //alert('index');
+       window.location.href = "../index.html";
+     //setTimeout( Play68.goHome(), 500 )
    },
 
-   gotoTwitter: function() {
-    play68_submitscore(window.myPlayScore)
+   gotoTwitter: function () {
+       Share();
+   },
+
+   gotopay: function () {
+       window.location = "http://zbkjpay.91wzs.com/example/payauth.aspx?total_fee=20&type=22&ref=" + escape("http://" + window.location.host + "/22_nuexin/index.html");
    },
 
    render: function() {
