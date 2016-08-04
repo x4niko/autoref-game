@@ -60,7 +60,7 @@ TheTower.Boot.prototype = {
         if( scaleValue(10) != 10){
            this.load.image('logo', 'assets/softgames@2x.png');
         }else{
-            this.load.image('logo', 'assets/softgames@2x.png');
+            this.load.image('logo', 'assets/softgames.png');
         }
     },
 

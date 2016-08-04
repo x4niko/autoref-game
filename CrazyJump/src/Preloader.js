@@ -41,8 +41,8 @@ TheTower.Preloader.prototype = {
             this.load.atlasXML('sprites', 'assets/sprites@2x.png', 'assets/sprites@2x.xml');
             this.load.spritesheet('run', 'assets/run@2x.png', 90, 140, 16);
         }else{
-            this.load.atlasXML('sprites', 'assets/sprites@2x.png', 'assets/sprites@2x.xml');
-            this.load.spritesheet('run', 'assets/run@2x.png', 45, 70, 16);
+            this.load.atlasXML('sprites', 'assets/sprites.png', 'assets/sprites@2x.xml');
+            this.load.spritesheet('run', 'assets/run.png', 45, 70, 16);
         }
 
         // this.load.audio( "button", ["assets/snd/button.mp3"]);
