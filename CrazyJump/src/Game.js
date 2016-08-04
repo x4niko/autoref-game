@@ -62,7 +62,7 @@ TheTower.Game.prototype = {
 
        //this.game.sndManager.playTheme();
 
-       this.game.world.setBounds( 0, 0, scaleValue(10000), this.game.height );
+       this.game.world.setBounds( 0, 0, scaleValue(100000), this.game.height );
        this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
 
