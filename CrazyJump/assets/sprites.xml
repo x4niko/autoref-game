@@ -1,0 +1,19 @@
+<TextureAtlas imagePath="sprites.png">
+<!--
+
+	Created with ShoeBox
+	http://renderhjs.net/shoebox/
+
+-->
+<SubTexture name="New" x="186" y="230" width="52" height="18" frameX="-0" frameY="-0" frameWidth="52" frameHeight="18"/>
+<SubTexture name="Tutor" x="219" y="0" width="178" height="167" frameX="-0" frameY="-0" frameWidth="178" frameHeight="167"/>
+<SubTexture name="buttonMore" x="62" y="185" width="61" height="61" frameX="-0" frameY="-0" frameWidth="61" frameHeight="61"/>
+<SubTexture name="buttonPause" x="248" y="168" width="43" height="43" frameX="-0" frameY="-0" frameWidth="43" frameHeight="43"/>
+<SubTexture name="buttonPlay" x="186" y="168" width="61" height="61" frameX="-0" frameY="-0" frameWidth="61" frameHeight="61"/>
+<SubTexture name="buttonSoundOff" x="124" y="185" width="61" height="61" frameX="-0" frameY="-0" frameWidth="61" frameHeight="61"/>
+<SubTexture name="buttonSoundOn" x="124" y="123" width="61" height="61" frameX="-0" frameY="-0" frameWidth="61" frameHeight="61"/>
+<SubTexture name="gameOverBorder" x="0" y="0" width="218" height="122" frameX="-0" frameY="-0" frameWidth="218" frameHeight="122"/>
+<SubTexture name="medalBronze" x="62" y="123" width="61" height="61" frameX="-0" frameY="-0" frameWidth="61" frameHeight="61"/>
+<SubTexture name="medalGold" x="0" y="185" width="61" height="61" frameX="-0" frameY="-0" frameWidth="61" frameHeight="61"/>
+<SubTexture name="medalSilver" x="0" y="123" width="61" height="61" frameX="-0" frameY="-0" frameWidth="61" frameHeight="61"/>
+</TextureAtlas>
