@@ -37,13 +37,16 @@ TheTower.Preloader.prototype = {
 
 		this.load.setPreloadSprite(this.preloadBar);
 
-        if( scaleValue(10) != 10){
-            this.load.atlasXML('sprites', 'assets/sprites@2x.png', 'assets/sprites@2x.xml');
-            this.load.spritesheet('run', 'assets/run@2x.png', 90, 140, 16);
-        }else{
-            this.load.atlasXML('sprites', 'assets/sprites.png', 'assets/sprites.xml');
-            this.load.spritesheet('run', 'assets/run.png', 45, 70, 16);
-        }
+				this.load.atlasXML('sprites', 'assets/sprites@2x.png', 'assets/sprites@2x.xml');
+				this.load.spritesheet('run', 'assets/run@2x.png', 90, 140, 16);
+
+        // if( scaleValue(10) != 10){
+        //     this.load.atlasXML('sprites', 'assets/sprites@2x.png', 'assets/sprites@2x.xml');
+        //     this.load.spritesheet('run', 'assets/run@2x.png', 90, 140, 16);
+        // }else{
+        //     this.load.atlasXML('sprites', 'assets/sprites.png', 'assets/sprites.xml');
+        //     this.load.spritesheet('run', 'assets/run.png', 45, 70, 16);
+        // }
 
         // this.load.audio( "button", ["assets/snd/button.mp3"]);
         // this.load.audio( "hit", ["assets/snd/hit.mp3"]);
