@@ -8,7 +8,7 @@ function GetPlatformAction( isDesktop, lang ){
 var Lang = {
     'en':
     [
-        "游戏结束",   
+        "游戏结束",
         "通关",
         "最好成绩",
         "",
@@ -17,8 +17,7 @@ var Lang = {
         "更多好玩",
         "新",
         "点击",
-        "点击",
-          "打赏"
+        "点击"
     ],
 
     'ru':
@@ -51,7 +50,7 @@ var Lang = {
 
     'es':
     [
-        'Fin del juego', 
+        'Fin del juego',
         'Resultado',
         'Mejor',
         'Premio',
@@ -77,7 +76,7 @@ var Lang = {
         'Cliquez'
     ],
 
-    'it':    
+    'it':
     [
         'Game Over',
         'Risultato',
@@ -91,7 +90,7 @@ var Lang = {
         'Clic'
     ],
 
-    'pt':    
+    'pt':
     [
         'Fim do Jogo',
         'Resultado',
@@ -117,5 +116,5 @@ var Lang = {
         'Yeni',
         'Tuşla',
         'Tıkla'
-    ] 
+    ]
 };

@@ -79,7 +79,7 @@ p.jump = function() {
 		return;
 
     this.play('salto', 1, true);
-    // this.game.sndManager.playJump();
+    this.game.sndManager.playJump();
 	this.jumpNum++;
 
 	this.fly();
@@ -107,7 +107,7 @@ p.flip = function() {
 p.grounded = function() {
     if( this.jumpNum != 0 && this.x > scaleValue(500)){
         this.getScore.dispatch();
-        // this.game.sndManager.playGot();
+        this.game.sndManager.playGot();
     }
 	this.jumpNum = 0;
     this.play('run', this.fps, true);
@@ -121,7 +121,7 @@ p.hit = function() {
     this.tween.stop();
     this.play('kill', 1, true);
     this.angle = -70;
-    // this.game.sndManager.playHit();
+    this.game.sndManager.playHit();
 	this.active = false;
 	this.body.velocity.y = scaleValue(50);
 	this.body.velocity.x = -scaleValue(130);

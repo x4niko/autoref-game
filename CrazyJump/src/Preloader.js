@@ -45,10 +45,10 @@ TheTower.Preloader.prototype = {
             this.load.spritesheet('run', 'assets/run.png', 45, 70, 16);
         }
 
-        // this.load.audio( "button", ["assets/snd/button.mp3"]);
-        // this.load.audio( "hit", ["assets/snd/hit.mp3"]);
-        // this.load.audio( "jump", ["assets/snd/jump.mp3"]);
-        // this.load.audio( "got", ["assets/snd/got.mp3"]);
+        this.load.audio( "button", ["assets/snd/button.mp3"]);
+        this.load.audio( "hit", ["assets/snd/hit.mp3"]);
+        this.load.audio( "jump", ["assets/snd/jump.mp3"]);
+        this.load.audio( "got", ["assets/snd/got.mp3"]);
 	},
 
 	create: function () {
@@ -57,11 +57,11 @@ TheTower.Preloader.prototype = {
 		if( localStorage["Jumper.version"] != 0.1 )
 		{
 			localStorage["Jumper.version"] = 0.1;
-            // localStorage["Jumper.sound"] = true;
+            localStorage["Jumper.sound"] = true;
             localStorage["Jumper.bestScore"] = 0;
 		}
 
-        // this.game.sndManager = new SoundManager( this.game, JSON.parse(localStorage["Jumper.sound"]) );
+        this.game.sndManager = new SoundManager( this.game, JSON.parse(localStorage["Jumper.sound"]) );
 
 		this.preloadBar.cropEnabled = false;
 
