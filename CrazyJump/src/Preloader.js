@@ -60,7 +60,7 @@ TheTower.Preloader.prototype = {
 		if( localStorage["Jumper.version"] != 0.1 )
 		{
 			localStorage["Jumper.version"] = 0.1;
-            localStorage["Jumper.sound"] = true;
+            // localStorage["Jumper.sound"] = true;
             localStorage["Jumper.bestScore"] = 0;
 		}
 
