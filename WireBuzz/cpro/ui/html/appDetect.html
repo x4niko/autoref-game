@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>百度网盟推广</title>
+		
+		<script type="text/javascript">
+			/**
+			 * 注册基本方法
+			 * 
+			 * 对外接口由action name标识
+			 * 
+			 * 
+			 * 对于数据的存储格式，基于优化性能目的做了妥协，只维护键值数组
+			 * 以 __ 开头的item是数组元素，这种命名方式区分该域下localStorage的共有/私有item
+			 * 存储示例：
+			 *
+			 *     appkey列表  ["appkey1","appkey2"]
+			 *     探测对象    "__appkey1" {"appkey":"appkey1","sk":"xxx","clicktime":11,"checktime":11,"detecttimes":2}
+			 *                 "__appkey2" {"appkey":"appkey2","sk":"xxx","clicktime":11,"checktime":11,"detecttimes":2}
+			 *
+			 */
+			 
+			/**
+			 * 是否IOS设备
+			 */
+			var ISIOS = !!(/(iPhone|iPad|iPod|iOS)/i.test(window.navigator.userAgent))
+			/**
+			 * 私有item的key前缀
+			 */
+			var P = "__";
+			/**
+			 * 全局interval，setInterval的返回对象
+			 */
+			var TI;
+			/**
+			 * localStorage
+			 */
+			var LS = window.localStorage;
+			/**
+			 * 配置对象key
+			 */
+			var CONF = "CHECK_INSTALLAPP_CONF";
+			/**
+			 * appkey列表数组key
+			 */
+			var KEYLIST = "CHECK_INSTALLAPP_LIST";
+			/**
+			 * 默认配置对象
+			 */
+			var DEFAULTCONF = {
+				"timeInterval":600000,// 10min
+				"checkCount":5,
+				"expiredTime":3600000000,// 1000h
+				"maxDetectTimes":5,
+				"detectPosition":0
+				// checkTime
+			};
+			/**
+			 * 用户不可设置属性
+			 */
+			var PRIVATEFILTER = ['clicktime','checktime','detecttimes','detectPosition','checkTime'];
+			
+			/**
+			 * 工具类Utility
+			 *
+			 */
+			var U = {
+				/**
+				 * 绑定事件
+				 */
+				bind : function(element, type, listener) {
+					type = type.replace(/^on/i, '').toLowerCase();
+
+					// 事件监听器挂载
+					if (element.addEventListener) {
+						element.addEventListener(type, listener, false);
+					} else if (element.attachEvent) {
+						element.attachEvent('on' + type, listener);
+					}
+					return element;
+				},
+				/**
+				 * 移除事件
+				 */
+				unBind : function(element, type, listener) {
+					type = type.replace(/^on/i, '').toLowerCase();
+
+					// 事件监听器挂载
+					if (element.removeEventListener) {
+						element.removeEventListener(type, listener, false);
+					} else if (element.detachEvent) {
+						element.detachEvent('on' + type, listener);
+					}
+					return element;
+				},
+				/**
+				 * 获取已存在对象并返回，非对象或不存在时返回null
+				 */
+				getObject : function(key) {
+					var obj = LS.getItem(key);
+					try{
+						obj = JSON.parse(obj);
+						return obj;
+					}catch(e) {
+						return null;
+					}
+				},
+				/**
+				 * 存储（或覆盖）对象
+				 */
+				setObject : function(key, value) {
+					var result = JSON.stringify(value);
+					LS.removeItem(key);
+					LS.setItem(key, result);
+				},
+				/**
+				 * 更新已存在对象存储，不存在则直接存储
+				 */
+				updateObject : function(key, value) {
+					var obj = LS.getItem(key),
+						result;
+					try{
+						obj = JSON.parse(obj);
+						// merge属性
+						for(var name in value){
+							if(value.hasOwnProperty(name))
+								obj[name] = value[name];
+						}
+						result = JSON.stringify(obj);
+					}catch(e) {
+						result = JSON.stringify(value);
+					}
+					LS.removeItem(key);
+					LS.setItem(key, result);
+				},
+				/**
+				 * 发送Get请求
+				 */
+				sendByIframe : function (url, randomDelay) {
+					// 随机延时发请求，优化效果
+					randomDelay = randomDelay || 0;
+					// 随机时间发送
+					randomDelay = parseInt(Math.random() * randomDelay * 1000);
+					window.setTimeout(function(){
+						var ifr = document.createElement("iframe");
+						ifr.id = "ifr" + parseInt(Math.random() * 100000);
+						ifr.style.display = "none";
+						ifr.setAttribute("src", url);
+						document.body.appendChild(ifr);
+					}, randomDelay);
+				}
+			};
+			
+			/**
+			 * 对外接口处理逻辑
+			 *
+			 */
+			var Set = {
+				/**
+				 * 设置配置接口
+				 */
+				"setConfig" : function(conf) {
+					conf = conf || {};
+					// 剔除不可设置字段
+					for(var i = 0; i < window.PRIVATEFILTER.length; i++){
+						delete conf[window.PRIVATEFILTER[i]];
+					}
+					
+					var localConf = Get.getConfig();
+					// 默认设置
+					if(localConf === null){
+						conf = window.DEFAULTCONF;
+					}
+					U.updateObject(window.CONF, conf);
+					
+					// 按照新配置check
+					if(!ISIOS){
+						window.clearInterval(TI);
+						TI = window.setInterval("window.DETECT.init()", conf.timeInterval);
+					}
+				},
+				/**
+				 * 添加下载项接口
+				 */
+				"pushApp" : function(app) {
+				
+					// 统计服务器与客户端时间差功能——与app探测功能逻辑无关
+					U.sendByIframe('http://mobads-logs.baidu.com/time.html', 1);
+					// 统计时间差功能结束
+					
+					// 键值须存在
+					if(!app || !app.appkey){
+						return;
+					}
+					// 剔除不可设置字段
+					for(var i = 0; i < window.PRIVATEFILTER.length; i++){
+						delete app[window.PRIVATEFILTER[i]];
+					}
+					
+					// 查看appkey键值列表
+					var list = Get.getAppkeyList();
+					if(list === null){
+						list = [];
+					}
+					for(var j = 0; j < list.length; j++){
+						if(app.appkey === list[j]){
+							// update数据操作
+							U.updateObject(window.P + app.appkey/*私有item*/, app)
+							return;
+						}
+					}
+					// 设置创建时间戳
+					app.clicktime = +(new Date());
+					// 新appkey，加入列表
+					list.push(app.appkey);
+					U.setObject(window.KEYLIST, list);
+					U.setObject(window.P + app.appkey/*私有item*/, app);
+				}
+			};
+			
+			/**
+			 * 获取数据接口
+			 *
+			 */
+			var Get = {
+				/**
+				 * 获取配置
+				 */
+				getConfig : function() {
+					// 配置名CHECK_INSTALLAPP_CONF
+					return U.getObject(window.CONF);
+				},
+				/**
+				 * 获取appkey列表
+				 */
+				getAppkeyList : function() {
+					// appkey列表名CHECK_INSTALLAPP_LIST
+					return U.getObject(window.KEYLIST);
+				}
+			};
+			
+			/**
+			 * 绑定对外action接口
+			 *
+			 */
+			(function(actions){
+				// 是否支持localStorage
+				if(!LS){
+					return;
+				}
+				U.bind(window, "message", function(msg){
+					if(typeof msg == 'object' && msg.data){
+						
+						// 传递元数据
+						var data = msg.data,
+						// action调用域
+							origin  = msg.origin,
+							actionName;
+							
+						// check action调用源
+						
+						// 处理元数据，分离出信息对象
+						if(data.substr(0, 13) !== 'baiduAppDetec'){
+							// 只以字符串'baiduAppDetec'开头，用于过滤非法调用
+							return;
+						}
+						data = data.substr(13);
+						// 提取actionName与内容数据——以::分隔
+						var spr = data.indexOf('::');
+						if(spr == -1){
+							return;
+						}
+						actionName = data.substring(0, spr);
+						data = data.substr(spr + 2);
+						
+						// 调用接口
+						if(actions[actionName]){
+							try {
+								var dataObj = JSON.parse(data);
+								actions[actionName](dataObj);
+							}catch(e){}
+						}
+					}
+				});
+			})(Set);
+		</script>
+	</head>
+	
+	<body>
+		<script type="text/javascript">
+			/**
+			 * 探测功能，加载iframe时自动触发
+			 *
+			 */
+			var DETECT = {
+				/**
+				 * 初始化配置
+				 */
+				init : function() {
+					var conf = Get.getConfig();
+					// 还没有设置配置对象，设置一个默认的
+					if(conf === null){
+						U.setObject(window.CONF, window.DEFAULTCONF);
+						conf = window.DEFAULTCONF;
+					}
+					
+					// check周期
+					this.timeInterval = conf.timeInterval;
+					// 一次check个数
+					this.checkCount = conf.checkCount;
+					// 过期时间
+					this.expiredTime = conf.expiredTime;
+					// 探测起始位置
+					this.detectPosition = conf.detectPosition;
+					// 同一app最多累计探测次数
+					this.maxDetectTimes = conf.maxDetectTimes;
+					
+					// 执行一轮check，由check时间戳保证时间段内（timeInterval / 2）不进行多次check
+					var now = +(new Date());
+					if(conf.checkTime && (now - conf.checkTime) < (conf.timeInterval / 2)){
+						return;
+					}
+					// 更新时间戳
+					U.updateObject(window.CONF, {"checkTime":now});
+					// 开始check
+					this.check();
+				},
+				/**
+				 * check app list
+				 */
+				check : function() {
+					var list = Get.getAppkeyList();
+					if(list === null || !list.length)return;
+					
+					// 起始位置
+					var start = this.detectPosition % list.length;
+					
+					var status,
+						// 待删除节点
+						toDelete = [];
+					for(var i = 0, l = 0; (i < this.checkCount) && (l < list.length); l++, start = ++start % list.length){
+						status = this.detect(list[start]);
+						// 过期节点不计数，直接删除
+						if(status === 1){
+							toDelete.push(start);
+							continue;
+						}
+						// 不计数，不删除节点
+						else if(status === 2){
+							continue;
+						}
+						i++;
+					}
+					// 待探测节点
+					var toDetect = list[start];
+					
+					// 删除节点
+					toDelete.sort(function(a, b){return b - a;})
+					for(var j = 0; j < toDelete.length; j++){
+						list.splice(toDelete[j], 1);
+					}
+					
+					// 更新探测列表
+					U.setObject(window.KEYLIST, list);
+					// 探测起始位置，记录当前列表项，供垃圾回收使用
+					var listKeyMap = {}
+					for(var k = 0; k < list.length; k++){
+						if(list[k] === toDetect){
+							this.detectPosition = k;
+						}
+						// 加入私有前缀
+						listKeyMap[window.P + list[k]] = true;
+					}
+					U.updateObject(window.CONF, {"detectPosition":this.detectPosition});
+					
+					// 垃圾节点回收
+					this.garbageCollection(listKeyMap);
+				},
+				/**
+				 * 探测
+				 * @param appkey 需要探测对象的appkey
+				 * @return 1：过期 2：达到check次数
+				 */
+				detect : function(appkey) {
+					var app = U.getObject(window.P + appkey);
+					// 不存在节点当作过期节点处理
+					if(app === null)return 1;
+					
+					// 探测记录
+					var checkedTime = app.checktime || 0;
+					app.checktime = +(new Date());
+					app.detecttimes = app.detecttimes || 0;
+					// 查看check日期是否超过一天
+					if(app.checktime - checkedTime > 24*3600*1000){
+						// 超过一天探测次数归零
+						app.detecttimes = 0;
+					}
+					
+					// 探测并更新记录
+					var result;
+					if((app.checktime - app.clicktime) > this.expiredTime){
+						// 过期节点
+						result = 1;
+					}else if(app.detecttimes >= this.maxDetectTimes){
+						// 超过当日探测次数限制
+						result = 2;
+					}else {
+						result = 0;
+						// 执行一次探测
+						var detectUrl = [
+							"x",
+							app.appkey,
+							"://",
+							app.appkey,
+							"?sk=",
+							app.sk
+						];
+						// 3s延时随机探测
+						U.sendByIframe(detectUrl.join(""), 3);
+						
+						// 更新探测记录
+						app.detecttimes++;
+						U.updateObject(window.P + appkey, app);
+					}
+					
+					return result;
+				},
+				/**
+				 * check app list
+				 * @param map 存在列表中的appkey
+				 */
+				garbageCollection : function(map) {
+					var key;
+					for(var i = 0; i < LS.length;){
+						key = LS.key(i);
+						// 以私有前缀开头的变量参与垃圾节点回收机制
+						if(key.indexOf(window.P) === 0 && !map[key]){
+							LS.removeItem(key);
+							continue;
+						}
+						i++;
+					}
+				}
+			};
+			
+			// ios设备不探测
+			if(!ISIOS){
+				// 加载即check
+				DETECT.init();
+				
+				// 开始周期性check
+				var _conf = Get.getConfig();
+				_conf = (_conf !== null) ? _conf : window.DEFAULTCONF;
+				TI = setInterval("DETECT.init()", _conf.timeInterval);
+			}
+		</script>
+	</body>
+</html>
